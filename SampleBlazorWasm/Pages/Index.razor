@@ -1,0 +1,146 @@
+﻿@page "/"
+@using SampleBlazorWasm.ModelDTO
+@inject IJSRuntime JS;
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">Dashboard</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+
+        <div>
+            Selected DepartmentIdList: @filterModel.DepartmentIdList
+        </div>
+        <div>
+            Selected EmployeeId: @filterModel.EmployeeId
+        </div>
+        <div>
+            Selected Daterange: @filterModel.Daterange
+        </div>
+
+
+        <EditForm Model="@filterModel" OnValidSubmit="ApplyFilters">
+            <!-- Filters card collapsed-card -->
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">Filters</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Department</label>
+                                <select id="ddDepartment" name="ddDepartment" class="form-control select2" @bind="filterModel.DepartmentIdList"
+                                        multiple="multiple" data-placeholder="Select a Department" style="width: 100%;">
+                                    <option value="-1">All</option>
+                                    <option value="1">Chief Executive Office</option> 
+                                    <option value="3">Human Capital</option> 
+                                    <option value="5">Customer Services</option>
+                                    <option value="6">Information Technology</option>
+                                </select>
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Employee</label>
+                                <select id="ddEmployee" class="form-control select2bs4" style="width: 100%;" @bind="filterModel.EmployeeId">
+                                    <option value="-1" selected="selected">All</option>
+                                    <option value="1">Aqeel</option>
+                                    <option value="2">Ehsan</option>
+                                    <option value="3">Shajar</option>
+                                    <option value="4">Imtiaz</option>
+                                    <option value="5">Adnan</option>
+                                </select>
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Duration</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="far fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control float-right" id="reservation" @bind="filterModel.Daterange" @bind:event="oninput" />
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-block btn-primary">Apply</button>
+                            <button type="button" class="btn btn-block btn-default" @onclick="ResetFilters">Reset</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /. Filters card -->
+
+        </EditForm>
+       
+    </div><!--/. container-fluid -->
+</section>
+<!-- /.content -->
+
+@code {
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("onBlazorReady"); 
+        }
+    }
+
+    private DashboardFilterDTO filterModel = new DashboardFilterDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ResetFilters();
+    }
+
+    private void ResetFilters()
+    {
+        filterModel = new DashboardFilterDTO(); 
+    }
+
+    private void ApplyFilters()
+    {
+
+        string deptIdList = filterModel.DepartmentIdList;
+        string empId = filterModel.EmployeeId;
+        string dateRange = filterModel.Daterange;
+
+    }
+}
